@@ -1,0 +1,21 @@
+# Build output
+/bin/
+/dist/
+web/dist/*
+!web/dist/.gitkeep
+web/node_modules/
+web/tsconfig.tsbuildinfo
+
+# iPXE source checkout (binaries in internal/bootfiles/assets are committed)
+/third_party/
+
+# Local runtime data
+/data/
+/isos/
+/testdata/isos/*.iso
+
+# Editors / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store

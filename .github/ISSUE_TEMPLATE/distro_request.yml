@@ -1,0 +1,21 @@
+name: ISO / distro support
+description: An ISO boots only via sanboot or fails, and should get a network-boot recipe
+labels: [distro]
+body:
+  - type: input
+    id: iso
+    attributes:
+      label: ISO download URL
+    validations:
+      required: true
+  - type: textarea
+    id: behaviour
+    attributes:
+      label: What happens when you boot it?
+      description: Screenshot or text of where it stops.
+  - type: textarea
+    id: bootcfg
+    attributes:
+      label: Kernel command line from the ISO
+      description: The `linux`/`APPEND` lines from the ISO's grub.cfg or isolinux.cfg help a lot.
+      render: text

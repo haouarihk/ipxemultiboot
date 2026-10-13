@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+      - name: Install xorriso (ISO test fixtures)
+        run: sudo apt-get update && sudo apt-get install -y xorriso
+      - run: test -z "$(gofmt -l cmd internal web)" || (gofmt -l cmd internal web; exit 1)
+      - run: go vet ./...
+      - run: go test -race ./...
+
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          package_json_file: web/package.json
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+          cache-dependency-path: web/pnpm-lock.yaml
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm build
+
+  shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # SC1090/SC1091: the Proxmox scripts source the community-scripts engine at runtime.
+      - run: shellcheck -e SC1090,SC1091,SC2154 scripts/*.sh proxmox/ct/*.sh proxmox/install/*.sh
+
+  ipxe:
+    # Make sure the committed iPXE binaries can be rebuilt from source.
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo apt-get update && sudo apt-get install -y build-essential liblzma-dev
+      - run: scripts/build-ipxe.sh

@@ -1,0 +1,43 @@
+name: Bug report
+description: Something doesn't boot or doesn't work as expected
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: iPXE Multiboot version
+      description: Shown under Settings → About, or `ipxemultiboot -version`
+    validations:
+      required: true
+  - type: dropdown
+    id: install
+    attributes:
+      label: Installation method
+      options: [Docker, Proxmox LXC, install.sh / systemd, Built from source, Other]
+    validations:
+      required: true
+  - type: dropdown
+    id: dhcp
+    attributes:
+      label: DHCP mode
+      options: [Proxy DHCP, Full DHCP server, Boot server only (bootstrap)]
+    validations:
+      required: true
+  - type: textarea
+    id: client
+    attributes:
+      label: Client machine and ISO
+      description: Firmware (BIOS/UEFI), hardware or hypervisor, and the exact ISO file name.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Server logs
+      description: "`journalctl -u ipxemultiboot` or `docker logs ipxemultiboot`, ideally with IPXEMULTIBOOT_DEBUG=1"
+      render: text

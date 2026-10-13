@@ -1,0 +1,19 @@
+services:
+  ipxemultiboot:
+    image: ghcr.io/haouarihk/ipxemultiboot:latest
+    container_name: ipxemultiboot
+    # PXE/DHCP uses layer-2 broadcasts, so the container must share the host network.
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+      - NET_BIND_SERVICE
+    environment:
+      # proxy (alongside your router), full (iPXE Multiboot is the DHCP server) or bootstrap (TFTP/HTTP only)
+      IPXEMULTIBOOT_DHCP_MODE: proxy
+      # IPXEMULTIBOOT_IFACE: eth0
+      # IPXEMULTIBOOT_HTTP_PORT: 8080
+    volumes:
+      - ./data:/data
+      - ./isos:/isos
+    restart: unless-stopped

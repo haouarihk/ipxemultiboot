@@ -1,0 +1,14 @@
+#!ipxe
+# Embedded into the iPXE Multiboot iPXE builds.
+# proxy mode: the proxyDHCP reply already carries the HTTP menu URL -> autoboot.
+# full/bootstrap mode: fetch autoexec.ipxe from the next-server (iPXE Multiboot),
+# which chains to the HTTP menu. This breaks the PXE->iPXE->PXE loop even when
+# the DHCP server (e.g. a plain router) hands every client the same filename.
+:retry
+dhcp || goto wait
+isset ${proxydhcp/next-server} && autoboot ||
+chain --replace tftp://${next-server}/autoexec.ipxe || autoboot
+:wait
+echo No DHCP answer, retrying...
+sleep 3
+goto retry

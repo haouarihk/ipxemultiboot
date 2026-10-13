@@ -1,0 +1,51 @@
+{
+  "name": "iPXE Multiboot",
+  "slug": "ipxemultiboot",
+  "categories": [4],
+  "date_created": "2026-10-13",
+  "type": "ct",
+  "updateable": true,
+  "privileged": false,
+  "interface_port": 8080,
+  "documentation": "https://github.com/haouarihk/ipxemultiboot#readme",
+  "website": "https://github.com/haouarihk/ipxemultiboot",
+  "repository": "https://github.com/haouarihk/ipxemultiboot",
+  "logo": "https://cdn.jsdelivr.net/gh/selfhst/icons@main/webp/ipxemultiboot.webp",
+  "description": "iPXE Multiboot is an open source network boot (PXE) server: drop ISO files into a folder and boot them on any machine in the LAN, BIOS or UEFI. It detects common Linux distributions and boots their kernel straight out of the ISO over HTTP, falls back to iPXE sanboot for everything else, and ships a web interface for uploads, DHCP mode and live boot activity.",
+  "install_methods": [
+    {
+      "type": "default",
+      "script": "ct/ipxemultiboot.sh",
+      "config_path": "/opt/ipxemultiboot_data/ipxemultiboot.env",
+      "resources": {
+        "cpu": 1,
+        "ram": 512,
+        "hdd": 16,
+        "os": "Debian",
+        "version": "13"
+      }
+    }
+  ],
+  "default_credentials": {
+    "username": null,
+    "password": null
+  },
+  "notes": [
+    {
+      "text": "The first visit to the web interface creates the admin account and runs a short setup wizard.",
+      "type": "info"
+    },
+    {
+      "text": "ISO files live in /opt/ipxemultiboot_data/isos. For large libraries bind-mount host storage there, e.g. pct set <CTID> -mp0 /mnt/isos,mp=/opt/ipxemultiboot_data/isos",
+      "type": "info"
+    },
+    {
+      "text": "The container must be bridged into the LAN the clients boot from (e.g. vmbr0). The default Proxy DHCP mode works alongside the router's DHCP server; switch to Full DHCP only on an isolated network.",
+      "type": "warning"
+    },
+    {
+      "text": "Boot files and ISOs are served without authentication on port 8080 so firmware can fetch them. Run iPXE Multiboot only on trusted networks.",
+      "type": "warning"
+    }
+  ]
+}
