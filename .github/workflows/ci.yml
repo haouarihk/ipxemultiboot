@@ -45,8 +45,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      # SC1090/SC1091: the Proxmox scripts source the community-scripts engine at runtime.
-      - run: shellcheck -e SC1090,SC1091,SC2154 scripts/*.sh proxmox/ct/*.sh proxmox/install/*.sh
+      # SC1090/SC1091/SC2154: the Proxmox scripts source the community-scripts engine at runtime.
+      # SC2054: commas inside QEMU arguments (-drive if=pflash,format=raw) are intentional.
+      - run: shellcheck -e SC1090,SC1091,SC2054,SC2154 scripts/*.sh proxmox/ct/*.sh proxmox/install/*.sh
 
   ipxe:
     # Make sure the committed iPXE binaries can be rebuilt from source.
